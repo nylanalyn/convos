@@ -34,6 +34,7 @@ subtest 'update' => sub {
   is_deeply(
     $t->tx->res->json,
     {
+      avatar_id          => undef,
       email              => 'superman@example.com',
       forced_connection  => false,
       default_connection => 'irc://localhost:6123/%23convos',
@@ -53,6 +54,11 @@ subtest 'update' => sub {
   $t->get_ok('/api/user')->status_is(200)->json_is('/email', 'superman@example.com')
     ->json_is('/highlight_keywords', ['foo']);
   like + $t->tx->res->body, qr{"uid":"1"}, 'right type for uid';
+
+  $t->post_ok('/api/user/superman@example.com', json => {avatar_id => 5})->status_is(200);
+  $t->get_ok('/api/user')->status_is(200)->json_is('/avatar_id', 5);
+  $t->post_ok('/api/user/superman@example.com', json => {avatar_id => undef})->status_is(200);
+  $t->get_ok('/api/user')->status_is(200)->json_is('/avatar_id', undef);
 };
 
 subtest 'update password, including unicode' => sub {

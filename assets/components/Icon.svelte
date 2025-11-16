@@ -6,70 +6,11 @@ const contributorIcons = {
   marcusr: 'https://www.gravatar.com/avatar/6c056546d802b1a9ac186ab63f9fb632',
 };
 
-const pickIcons = [
-  'fas fa-anchor',
-  'fas fa-atom',
-  'fas fa-award',
-  'fas fa-balance-scale',
-  'fas fa-baseball-ball',
-  'fas fa-basketball-ball',
-  'fas fa-bicycle',
-  'fas fa-bolt',
-  'fas fa-book-reader',
-  'fas fa-candy-cane',
-  'fas fa-carrot',
-  'fas fa-cat',
-  'fas fa-chess-knight',
-  'fas fa-child',
-  'fas fa-coffee',
-  'fas fa-cookie-bite',
-  'fas fa-crow',
-  'fas fa-dice',
-  'fas fa-dog',
-  'fas fa-dove',
-  'fas fa-feather',
-  'fas fa-fish',
-  'fas fa-gem',
-  'fas fa-ghost',
-  'fas fa-hard-hat',
-  'fas fa-hat-cowboy',
-  'fas fa-hat-wizard',
-  'fas fa-hiking',
-  'fas fa-horse-head',
-  'fas fa-horse',
-  'fas fa-id-badge',
-  'fas fa-igloo',
-  'fas fa-mask',
-  'fas fa-meteor',
-  'fas fa-paint-brush',
-  'fas fa-paw',
-  'fas fa-pepper-hot',
-  'fas fa-pizza-slice',
-  'fas fa-portrait',
-  'fas fa-puzzle-piece',
-  'fas fa-rainbow',
-  'fas fa-robot',
-  'fas fa-rocket',
-  'fas fa-running',
-  'fas fa-seedling',
-  'fas fa-skating',
-  'fas fa-skiing',
-  'fas fa-smile',
-  'fas fa-snowboarding',
-  'fas fa-snowflake',
-  'fas fa-snowman',
-  'fas fa-swimmer',
-  'fas fa-umbrella',
-  'fas fa-user-astronaut',
-  'fas fa-user-graduate',
-  'fas fa-user-ninja',
-  'fas fa-user-secret',
-  'fas fa-walking',
-  'fas fa-yin-yang',
-];
 </script>
 
 <script>
+import {avatarClassForKey} from '../js/avatars';
+
 let className = '';
 
 export {className as class};
@@ -77,15 +18,16 @@ export let animation = '';
 export let color = '';
 export let family = '';
 export let name;
+export let avatarId;
 
-function calculateClassName(name, family, animation) {
+function calculateClassName(name, family, animation, explicitAvatarId) {
   const cn = [];
   const pick = name.match(/^pick:(.+)$/);
 
   if (pick) {
     if (pick[1] === 'Convos') return 'fas fa-info-circle'; // Uppercase "C" is not a typo
     if (contributorIcons[pick[1]]) return 'fas fa-contributor for-' + pick[1].toLowerCase();
-    cn.push(pickIcon(pick[1]));
+    cn.push(avatarClassForKey(pick[1], explicitAvatarId));
   }
   else {
     cn.push(familyToClassName[family] || 'fas');
@@ -114,17 +56,6 @@ function calculateStyle(name, color) {
 
   return rules.join(';');
 }
-
-function pickIcon(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    hash = hash & hash;
-  }
-
-  hash = Math.abs(hash);
-  return pickIcons[hash % pickIcons.length];
-}
 </script>
 
-<i class="{calculateClassName(name, family, animation)}" style="{calculateStyle(name, color)}" hidden="{!name}"/>
+<i class="{calculateClassName(name, family, animation, avatarId)}" style="{calculateStyle(name, color)}" hidden="{!name}"/>

@@ -191,6 +191,19 @@ sub _clean_json {
     $json->{$k} = [grep {/\w/} map { trim $_ } @{$json->{$k}}] if $json->{$k};
   }
 
+  if (exists $json->{avatar_id}) {
+    my $avatar_id = $json->{avatar_id};
+    if (!defined $avatar_id || $avatar_id eq '') {
+      $json->{avatar_id} = undef;
+    }
+    elsif ($avatar_id =~ /^\d+$/) {
+      $json->{avatar_id} = int $avatar_id;
+    }
+    else {
+      $json->{avatar_id} = undef;
+    }
+  }
+
   return $json;
 }
 
@@ -290,6 +303,7 @@ async sub _update_user_p {
   $user->highlight_keywords($json->{highlight_keywords}) if $json->{highlight_keywords};
   $user->roles($json->{roles}) if $json->{roles} and $self->user->has_admin_rights($admin);
   $user->set_password($json->{password}) if $json->{password};
+  $user->avatar_id($json->{avatar_id}) if exists $json->{avatar_id};
   await $user->save_p;
   my $session_email = $self->session('email');
   $self->session(email => $user->email) if !$session_email or $user->email eq $session_email;

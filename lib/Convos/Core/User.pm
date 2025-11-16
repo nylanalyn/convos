@@ -9,6 +9,7 @@ use Mojo::Date;
 use Mojo::Promise;
 use Mojo::Util qw(camelize trim);
 
+has avatar_id => sub { undef };
 sub core  { shift->{core}  or die 'core is required in constructor' }
 sub email { shift->{email} or die 'email is required in constructor' }
 has highlight_keywords => sub { +[] };
@@ -164,6 +165,16 @@ sub _normalize_attributes {
   $self->{highlight_keywords} = [grep {/\w/} map { trim $_ } @{$self->{highlight_keywords} || []}];
   $self->{registered}         = $self->{registered}
     && !ref $self->{registered} ? Mojo::Date->new($self->{registered}) : Mojo::Date->new;
+  if (exists $self->{avatar_id}) {
+    my $id = $self->{avatar_id};
+    if (!defined $id || $id eq '') {
+      $self->{avatar_id} = undef;
+    }
+    else {
+      $id = int $id;
+      $self->{avatar_id} = $id >= 0 ? $id : undef;
+    }
+  }
   return $self;
 }
 
@@ -179,6 +190,7 @@ sub TO_JSON {
   $json->{roles}              = $self->roles;
   $json->{unread}             = $self->unread;
   $json->{uid}                = sprintf '%s', $self->uid;    # force to a string
+  $json->{avatar_id}          = $self->avatar_id;
   $json;
 }
 

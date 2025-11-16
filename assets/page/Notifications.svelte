@@ -51,7 +51,7 @@ onMount(async () => {
     {/if}
 
     <div class="{message.className}">
-      <Icon name="pick:{message.from}" color="{message.color}"/>
+      <Icon name="pick:{message.from}" color="{message.color}" avatarId="{message.yourself ? $user.avatarId : undefined}"/>
       <span class="message__from" style="color:{message.color}" tabindex="-1">{message.from}</span>
       <a href={conversationUrl(message)}>
         <div class="message__ts has-tooltip">

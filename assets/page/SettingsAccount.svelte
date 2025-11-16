@@ -6,6 +6,7 @@ import Icon from '../components/Icon.svelte';
 import OperationStatus from '../components/OperationStatus.svelte';
 import SelectField from '../components/form/SelectField.svelte';
 import TextField from '../components/form/TextField.svelte';
+import {avatarOptions} from '../js/avatars';
 import {convosApi} from '../js/Api';
 import {getContext, onDestroy, onMount} from 'svelte';
 import {i18n, l, lmd} from '../store/I18N.js';
@@ -19,6 +20,7 @@ const registerProtocolHandlerSupported = 'registerProtocolHandler' in navigator;
 const themeManager = getContext('themeManager');
 const user = getContext('user');
 const updateUserOp = convosApi.op('updateUser');
+const avatarChoices = avatarOptions();
 
 let form = {};
 
@@ -30,6 +32,7 @@ $: if (form.handle_protocol_ircs) registerProtocol('ircs');
 onMount(() => {
   form = {
     activeTheme: themeManager.activeTheme,
+    avatarId: user.avatarId,
     colorScheme: themeManager.colorScheme,
     compactDisplay: themeManager.compactDisplay,
     email: user.email,
@@ -54,6 +57,14 @@ function registerProtocol(proto) {
   navigator.registerProtocolHandler(proto, route.urlFor('/register?uri=%s'), $l('Convos %1 handler', proto));
 }
 
+function selectAvatar(id) {
+  form.avatarId = id;
+}
+
+function clearAvatar() {
+  form.avatarId = null;
+}
+
 function saveAccount() {
   const passwords = [form.password, form.password_again];
   if (passwords.join('').length && passwords[0] !== passwords[1]) return updateUserOp.error('Passwords does not match.');
@@ -66,7 +77,7 @@ function saveAccount() {
   themeManager.update(form);
 
   const highlightKeywords = str2array(form.highlightKeywords);
-  const body = {email: user.email, highlight_keywords: highlightKeywords};
+  const body = {email: user.email, highlight_keywords: highlightKeywords, avatar_id: form.avatarId};
   if (passwords[0]) body.password = passwords[0];
   user.update(form).update({highlightKeywords});
   updateUserOp.perform(body);
@@ -85,6 +96,28 @@ function saveAccount() {
     <TextField name="highlightKeywords" bind:value="{form.highlightKeywords}" placeholder="{$l('whatever, keywords')}">
       <span slot="label">{$l('Notification keywords')}</span>
     </TextField>
+    <fieldset class="avatar-picker">
+      <legend>{$l('Avatar')}</legend>
+      <p class="help">{$l('Pick the icon you want to use. Leave it automatic to hash your nick like before.')}</p>
+      <div class="avatar-preview">
+        <Icon name="pick:{form.email || user.email}" avatarId="{form.avatarId}"/>
+        <span>{form.avatarId === null ? $l('Automatic') : $l('Selected')}</span>
+        <Button type="button" class="is-secondary" on:click="{clearAvatar}" disabled="{form.avatarId === null}">
+          <span>{$l('Use automatic icon')}</span>
+        </Button>
+      </div>
+      <div class="avatar-grid">
+        {#each avatarChoices as option}
+          <button type="button"
+            class:selected="{form.avatarId === option.id}"
+            aria-pressed="{form.avatarId === option.id}"
+            aria-label="{$l('Select avatar %1', option.id + 1)}"
+            on:click="{() => selectAvatar(option.id)}">
+            <Icon name="pick:{form.email || user.email}" avatarId="{option.id}"/>
+          </button>
+        {/each}
+      </div>
+    </fieldset>
     <Checkbox name="wantNotifications" bind:value="{form.wantNotifications}">
       <span slot="label">{$l('Enable notifications')}</span>
     </Checkbox>
@@ -152,3 +185,57 @@ function saveAccount() {
     </form>
   {/if}
 </main>
+
+<style>
+  .avatar-picker {
+    border: 1px solid var(--input-border, rgba(0, 0, 0, 0.1));
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+  }
+
+  .avatar-picker legend {
+    font-weight: 600;
+  }
+
+  .avatar-preview {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .avatar-preview :global(i) {
+    font-size: 2rem;
+  }
+
+  .avatar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .avatar-grid button {
+    align-items: center;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 0.35rem;
+  }
+
+  .avatar-grid button:focus-visible {
+    outline: 2px solid var(--focus-color, var(--primary-color));
+  }
+
+  .avatar-grid button.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+  }
+
+  .avatar-grid button :global(i) {
+    font-size: 1.5rem;
+  }
+</style>

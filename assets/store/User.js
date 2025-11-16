@@ -26,6 +26,7 @@ export default class User extends Reactive {
     this.prop('persist', 'lastUrl', '');
 
     this.prop('rw', 'activeConversation', this.notifications);
+    this.prop('rw', 'avatarId', null);
     this.prop('rw', 'email', '');
     this.prop('rw', 'forced_connection', false);
     this.prop('rw', 'default_connection', 'irc://irc.libera.chat:6697/%23convos');
@@ -114,6 +115,7 @@ export default class User extends Reactive {
     videoService.fromString(data.video_service || '');
 
     return this.update({
+      avatarId: Object.hasOwn(data, 'avatar_id') ? data.avatar_id : null,
       email: data.email || '',
       default_connection: data.default_connection || '',
       forced_connection: data.forced_connection || false,

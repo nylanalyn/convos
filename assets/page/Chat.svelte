@@ -172,7 +172,7 @@ function setConversationFromUser(user) {
         <span>{message.ts.format('%H:%M')}</span>
         <span class="tooltip">{nbsp(message.ts.toLocaleString())}</span>
       </div>
-      <Icon name="pick:{message.from}" color="{message.color}"/>
+      <Icon name="pick:{message.from}" color="{message.color}" avatarId="{message.yourself ? $user.avatarId : undefined}"/>
       <a href="#action:popover:{message.index}" class="message__from" style="color:{message.color}" tabindex="-1">{message.from}</a>
       <div class="message__text">
         {#if message.details}
@@ -191,7 +191,7 @@ function setConversationFromUser(user) {
       <!-- popover message menu -->
       {#if popoverIndex === message.index}
         <div class="popover" transition:fade="{{duration: 200}}">
-          <a href="#action:popover:{message.index}"><Icon name="pick:{message.from}" color="{message.color}"/> {message.from}</a>
+          <a href="#action:popover:{message.index}"><Icon name="pick:{message.from}" color="{message.color}" avatarId="{message.yourself ? $user.avatarId : undefined}"/> {message.from}</a>
           <a href="#action:mention:{encodeURIComponent(message.from)}" class="on-hover"><Icon name="quote-left"/> {$l('Mention')}</a>
           <a href="#action:join:{encodeURIComponent(message.from)}" class="on-hover"><Icon name="comments"/> {$l('Chat')}</a>
           <a href="#action:whois:{encodeURIComponent(message.from)}" class="on-hover"><Icon name="address-card"/> {$l('Whois')}</a>

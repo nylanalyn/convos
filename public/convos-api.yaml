@@ -708,6 +708,9 @@ paths:
         schema:
           type: object
           properties:
+            avatar_id:
+              description: Explicit avatar icon selection. Set to null to use automatic icon.
+              type: integer
             highlight_keywords:
               description: Extra keywords to highlight on
               items:
@@ -1008,6 +1011,9 @@ definitions:
     type: object
     required: [ email, unread ]
     properties:
+      avatar_id:
+        description: Explicit avatar icon selection
+        type: integer
       connections:
         items:
           $ref: '#/definitions/Connection'

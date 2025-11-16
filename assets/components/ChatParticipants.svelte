@@ -1,10 +1,12 @@
 <script>
 import Icon from '../components/Icon.svelte';
 import {activeMenu} from '../store/viewport';
+import {getContext} from 'svelte';
 import {l} from '../store/I18N';
 import {userGroupHeadings} from '../js/constants';
 
 export let conversation;
+const user = getContext('user');
 
 $: participants = conversation.participants;
 
@@ -29,7 +31,7 @@ function navItems($participants) {
         <h3>{$l(item.heading)}</h3>
       {:else}
         <a href="#action:join:{item.nick}" class="participant prevent-default">
-          <Icon name="pick:{item.nick}" family="solid" color="{item.color}"/>
+          <Icon name="pick:{item.nick}" family="solid" color="{item.color}" avatarId="{item.me ? $user.avatarId : undefined}"/>
           <span>{item.nick}</span>
         </a>
       {/if}
