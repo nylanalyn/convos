@@ -112,7 +112,7 @@ sub _before_dispatch {
 
   # Handle /whatever/with%2Fslash/...
   my $path     = $c->req->url->path;
-  my $path_str = "$path";
+  my $path_str = defined $path ? "$path" : '';
   $path_str =~ s/%([0-9a-fA-F]{2})/{my $h = hex $1; $h == 47 ? '%2F' : chr $h}/ge;
   $path->leading_slash(1)  if $path_str =~ s!^/!!;
   $path->trailing_slash(1) if $path_str =~ s!/$!!;
