@@ -23,7 +23,13 @@ export default defineConfig(({mode}) => {
       minify: mode === 'development' ? false : 'esbuild',
       rollupOptions: {input: './assets/convos.js', output},
     },
-    plugins: [svelte()],
+    plugins: [svelte({
+      compilerOptions: {
+        compatibility: {
+          componentApi: 4,
+        },
+      },
+    })],
     publicDir: 'does/not/matter',
     resolve: {
       alias: {
