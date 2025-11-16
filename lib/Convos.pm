@@ -8,6 +8,7 @@ use Convos::Util  qw(is_true require_module);
 use File::HomeDir ();
 use Mojo::File    qw(path);
 use Mojo::JSON    qw(false true);
+use Mojo::Path;
 use Mojo::Util;
 use Scalar::Util qw(blessed);
 
@@ -111,7 +112,7 @@ sub _before_dispatch {
   my $c = shift;
 
   # Handle /whatever/with%2Fslash/...
-  my $path     = $c->req->url->path;
+  my $path     = $c->req->url->path // Mojo::Path->new;
   my $path_str = defined $path ? "$path" : '';
   $path_str =~ s/%([0-9a-fA-F]{2})/{my $h = hex $1; $h == 47 ? '%2F' : chr $h}/ge;
   $path->leading_slash(1)  if $path_str =~ s!^/!!;
