@@ -190,7 +190,7 @@ function setConversationFromUser(user) {
 
       <!-- popover message menu -->
       {#if popoverIndex === message.index}
-        <div class="popover" transition:fade="{{duration: 200}}">
+        <div class="popover" transition:fade={{duration: 200}}>
           <a href="#action:popover:{message.index}"><Icon name="pick:{message.from}" color="{message.color}" avatarId="{message.yourself ? $user.avatarId : undefined}"/> {message.from}</a>
           <a href="#action:mention:{encodeURIComponent(message.from)}" class="on-hover"><Icon name="quote-left"/> {$l('Mention')}</a>
           <a href="#action:join:{encodeURIComponent(message.from)}" class="on-hover"><Icon name="comments"/> {$l('Chat')}</a>
@@ -233,7 +233,7 @@ function setConversationFromUser(user) {
   {/if}
 
   {#if uploadProgress}
-    <div class="message" transition:fade="{{duration: 200}}">
+  <div class="message" transition:fade={{duration: 200}}>
       <div>{$l('Uploading %1...', uploader.file.name)}</div>
       <div class="progress">
         <div class="progress__bar" style="width:{uploadProgress}%;">{uploadProgress}%</div>

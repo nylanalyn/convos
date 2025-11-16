@@ -104,7 +104,7 @@ async function saveConnection() {
     <span slot="label">{$l('Advanced settings')}</span>
   </Checkbox>
   {#if showAdvancedSettings}
-    <div class="form-group" transition:slide="{{duration: 150}}">
+    <div class="form-group" transition:slide={{duration: 150}}>
       <TextArea name="on_connect_commands" bind:value="{form.on_connect_commands}" placeholder="{$l('Put each command on a new line.')}">
         <span slot="label">{$l('On-connect commands')}</span>
       </TextArea>
@@ -122,7 +122,7 @@ async function saveConnection() {
       <span slot="label">{$l('Authentication settings')}</span>
     </Checkbox>
     {#if showAuthSettings}
-      <div class="form-group" transition:slide="{{duration: 150}}">
+      <div class="form-group" transition:slide={{duration: 150}}>
         <TextField name="username" bind:value="{form.username}" placeholder="{form.nick}">
           <span slot="label">{$l('Username')}</span>
           <p class="help" slot="help">{$l('SASL and IRC server username.')}</p>

@@ -94,7 +94,7 @@ async function saveConnectionProfile() {
       <span slot="label">{$l('Advanced settings')}</span>
     </Checkbox>
     {#if showAdvancedSettings}
-      <div class="form-group" transition:slide="{{duration: 150}}">
+      <div class="form-group" transition:slide={{duration: 150}}>
         <TextField name="max_bulk_message_size" bind:value="{form.max_bulk_message_size}" type="number" readonly="{!isAdmin}">
           <span slot="label">{$l('Max number of pasted lines')}</span>
           <p class="help" slot="help">{$l('Setting this value too high might get you banned from the server.')}</p>
