@@ -710,7 +710,9 @@ paths:
           properties:
             avatar_id:
               description: Explicit avatar icon selection. Set to null to use automatic icon.
-              type: integer
+              type:
+                - integer
+                - 'null'
             highlight_keywords:
               description: Extra keywords to highlight on
               items:
@@ -1013,7 +1015,9 @@ definitions:
     properties:
       avatar_id:
         description: Explicit avatar icon selection
-        type: integer
+        type:
+          - integer
+          - 'null'
       connections:
         items:
           $ref: '#/definitions/Connection'
