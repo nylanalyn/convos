@@ -179,7 +179,8 @@ export default class User extends Reactive {
     if (!msg.bubbles) return;
 
     const conversation = conn.findConversation(msg);
-    if (conversation && conversation[msg.dispatchTo]) {
+    if (!conversation) return;
+    if (conversation[msg.dispatchTo]) {
       conversation[msg.dispatchTo](msg);
     }
 
